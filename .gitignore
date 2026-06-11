@@ -1,0 +1,10 @@
+# tpm installs plugins here at runtime — never commit them
+plugins/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

@@ -1,0 +1,77 @@
+# Prefix key
+unbind C-b
+set -g prefix `
+
+bind-key ` last-window
+bind u send-keys C-l \; run-shell "sleep .3s" \; clear-history
+
+# Clipboard copy with xclip
+bind -T copy-mode-vi y send -X copy-pipe-and-cancel "xclip -selection clipboard -in"
+set -s set-clipboard on
+set -as terminal-features ',rxvt-unicode-256color:clipboard'
+
+set -g mouse on
+
+set-option -g history-limit 5000
+set -g status-position bottom
+
+# Vim keybindings
+setw -g mode-keys vi
+bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key l select-pane -R
+
+# Resize with Ctrl + Arrows for resize
+bind -n C-S-Down resize-pane -D 5
+bind -n C-S-Up resize-pane -U 5
+bind -n C-S-Left resize-pane -L 5
+bind -n C-S-Right resize-pane -R 5
+
+# Start numbering at 1
+set -g base-index 1
+set -g pane-base-index 1
+set-window-option -g pane-base-index 1
+set -g renumber-windows on
+
+# PLUGINS
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'christoomey/vim-tmux-navigator'
+set -g @plugin 'dracula/tmux'
+
+# THEME SETTINGS
+set -g @dracula-show-powerline 1
+set -g @dracula-plugins "time cpu-usage ram-usage ssh-session"
+set -g @dracula-who-flags true
+set -g @dracula-show-left-icon session
+set -g @dracula-show-fahrenheit false
+set -g @dracula-time-format "%H:%M %d/%m/%Y"
+set -g @dracula-show-time true
+
+set -g @dracula-colors "
+white='#EBDBB2'
+gray='#282828'
+dark_gray='#282828'
+light_purple='#B16286'
+dark_purple='#CC241D'
+cyan='#689D6A'
+green='#98971A'
+orange='#D65D0E'
+red='#CC241D'
+pink='#D3869B'
+yellow='#D79921'
+"
+
+# split windows in same directory
+bind '"' split-window -v -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+
+# Kill panes easily
+unbind-key z
+bind-key z kill-pane
+unbind-key x
+bind-key x kill-window
+
+run '~/.tmux/plugins/tpm/tpm'
