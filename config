@@ -82,7 +82,8 @@ run '~/.tmux/plugins/tpm/tpm'
 
 # Pane borders: highlight the whole border of the active pane (after tpm so dracula can't override)
 set -g pane-border-lines heavy
-set -g pane-border-indicators both
+# 'colour'/'both' paint only half the border in two-pane windows; 'arrows' keeps the full outline
+set -g pane-border-indicators arrows
 # No pane-border-status: it replaces shared borders with a per-pane line,
 # so a border only turns red when the pane below/right of it is focused.
 set -g pane-border-status off
