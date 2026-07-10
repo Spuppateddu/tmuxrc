@@ -34,6 +34,10 @@ set -g pane-base-index 1
 set-window-option -g pane-base-index 1
 set -g renumber-windows on
 
+# Name windows after their current folder (a manual rename still wins, per window)
+set -g automatic-rename on
+set -g automatic-rename-format '#{b:pane_current_path}'
+
 # PLUGINS
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
@@ -42,7 +46,7 @@ set -g @plugin 'dracula/tmux'
 
 # THEME SETTINGS
 set -g @dracula-show-powerline 1
-set -g @dracula-plugins "cpu-usage ram-usage ssh-session"
+set -g @dracula-plugins "cwd git cpu-usage ram-usage ssh-session"
 set -g @dracula-who-flags true
 set -g @dracula-show-left-icon session
 set -g @dracula-show-fahrenheit false
@@ -76,5 +80,10 @@ bind-key x kill-window
 
 run '~/.tmux/plugins/tpm/tpm'
 
-# Current folder + git branch, right after the window list (left side)
-set -g status-format[0] "#[align=left range=left #{E:status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{E:window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange list=on default]#{?window_end_flag,,#{window-status-separator}}}#[nolist]#[fg=#EBDBB2,bg=#282828]  #(~/.tmuxrc/scripts/dir_git.sh folder '#{pane_current_path}')#[fg=#98971A,bg=#282828]#(~/.tmuxrc/scripts/dir_git.sh branch '#{pane_current_path}')#[default]#[align=right range=right #{E:status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]"
+# Make cwd/branch instant: path-aware scripts + a redraw on every switch
+run-shell '~/.tmuxrc/scripts/fast_status.sh'
+set -g status-interval 1
+set-hook -g after-select-pane 'refresh-client -S'
+set-hook -g after-select-window 'refresh-client -S'
+set-hook -g after-split-window 'refresh-client -S'
+set-hook -g session-window-changed 'refresh-client -S'
