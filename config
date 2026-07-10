@@ -80,6 +80,15 @@ bind-key x kill-window
 
 run '~/.tmux/plugins/tpm/tpm'
 
+# Pane borders: highlight the whole border of the active pane (after tpm so dracula can't override)
+set -g pane-border-lines heavy
+set -g pane-border-indicators both
+# Border line on top of every pane, so a lone pane is still outlined
+set -g pane-border-status top
+set -g pane-border-format ''
+set -g pane-border-style 'fg=#3c3836'
+set -g pane-active-border-style 'fg=#CC241D,bold'
+
 # Make cwd/branch instant: path-aware scripts + a redraw on every switch
 run-shell '~/.tmuxrc/scripts/fast_status.sh'
 set -g status-interval 1
