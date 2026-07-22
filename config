@@ -34,9 +34,12 @@ set -g pane-base-index 1
 set-window-option -g pane-base-index 1
 set -g renumber-windows on
 
-# Name windows after their current folder (a manual rename still wins, per window)
-set -g automatic-rename on
-set -g automatic-rename-format '#{b:pane_current_path}'
+# Name windows after the program running in the active pane (vim, lazygit,
+# claude, codex, …); node/python-based tools are resolved to their real name
+# instead of "node". At a shell prompt the window shows the command, like tmux's
+# default naming. Driven by name_windows.sh (hooked into the status line below),
+# so tmux's own automatic-rename stays off to avoid a tug of war.
+set -g automatic-rename off
 
 # PLUGINS
 set -g @plugin 'tmux-plugins/tpm'
@@ -92,6 +95,11 @@ set -g pane-active-border-style 'fg=#CC241D,bold'
 
 # Make cwd/branch instant: path-aware scripts + a redraw on every switch
 run-shell '~/.tmuxrc/scripts/fast_status.sh'
+
+# Re-check window names about once a second, as a hidden side-effect of drawing
+# the status line (name_windows.sh prints nothing). Runs after fast_status so
+# the append survives that rewrite, and after dracula's own status setup.
+run-shell '~/.tmuxrc/scripts/attach_name_poller.sh'
 set -g status-interval 1
 set-hook -g after-select-pane 'refresh-client -S'
 set-hook -g after-select-window 'refresh-client -S'
