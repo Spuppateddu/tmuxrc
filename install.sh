@@ -114,8 +114,8 @@ fi
 
 ok "Tmux ready."
 
-# ── AI-agent status dots ─────────────────────────────────────────────────────
-# name_windows.sh paints a colored dot from the @agent_state pane option, but
+# ── AI-agent status markers ──────────────────────────────────────────────────
+# name_windows.sh paints a status marker from the @agent_state pane option, but
 # something has to *set* that option. The reporting side lives in each agent's
 # own config, outside this repo — so wire it up from here, per agent, and only
 # for agents that are actually installed. Skipping an absent agent is a no-op,

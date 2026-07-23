@@ -37,27 +37,25 @@ navigation, mouse support, clipboard integration, and the
    ` + I
    ```
 
-## AI-agent status dots
+## AI-agent status markers
 
-Windows running an AI agent get a colored dot on the tab:
+Windows running an AI agent get a checkbox marker on the tab:
 
-| Dot | Color | Meaning |
+| Marker | Color | Meaning |
 | --- | --- | --- |
-| 🔵 | bright blue `#83A598` | working |
-| 🟠 | bright orange `#FE8019` | waiting for your input (permission / prompt) |
-| 🟢 | bright green `#B8BB26` | finished its turn |
+| `[~]` | bright blue `#83A598` | working |
+| `[ ]` | bright orange `#FE8019` | waiting for your input (permission / prompt) |
+| `[x]` | bright green `#B8BB26` | finished its turn |
 
-The dot is drawn by tmux (`#[fg=...]`), not a colored emoji, so it shows up in
-urxvt — which renders emoji monochrome.
-
-"Waiting" is orange, not yellow: gruvbox yellow and green are both dark
-yellow-greens and sit only ~18 ΔE00 apart, which reads as the same dot at one
-character. Orange vs green is ~36.
+The state is in the glyph, so it reads the same whether or not you can pick the
+color out of a busy status line. Color stays on as a redundant cue, drawn by
+tmux (`#[fg=...]`) rather than as a colored emoji, so it shows up in urxvt —
+which renders emoji monochrome.
 
 Two halves make it work, and `./install.sh` sets up both:
 
 - **Painting** — `scripts/name_windows.sh` reads the `@agent_state` pane option
-  and prepends the dot.
+  and prepends the marker.
 - **Reporting** — the agent calls `scripts/agent_state.sh <busy|wait|done|clear>`,
   which sets `@agent_state` on its own pane (via the inherited `$TMUX_PANE`).
   This half lives in each agent's own config, outside this repo:
@@ -70,8 +68,8 @@ Two halves make it work, and `./install.sh` sets up both:
   Claude Code's `Notification` hook goes through `scripts/agent_notify.sh`
   rather than straight to `agent_state.sh`: that one event fires both for
   "needs your permission" *and* for the idle nudge ~60s **after** a turn ends,
-  and treating the second as "waiting" would quietly repaint a finished green
-  window orange. opencode needs no such split — it has a real
+  and treating the second as "waiting" would quietly flip a finished `[x]`
+  window back to `[ ]`. opencode needs no such split — it has a real
   `permission.asked` event.
 
 `install.sh` only wires an agent it finds installed, merges into existing config

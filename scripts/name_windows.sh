@@ -9,26 +9,24 @@
 set -u
 NAME="$HOME/.tmuxrc/scripts/window_name.sh"
 
-# Status dot for AI-agent windows. @agent_state is a per-pane option set by
+# Status marker for AI-agent windows. @agent_state is a per-pane option set by
 # agent_state.sh (from Claude Code's hooks and opencode's plugin: busy/wait/
 # done). We only decorate windows whose program resolves to a known agent, so a
-# stale marker left on a pane that has since moved on can't leak a dot.
+# stale marker left on a pane that has since moved on can't leak a marker.
 #
-# The dot is colored by *tmux* via #[fg=...] rather than by a colored emoji:
-# urxvt renders emoji monochrome, so 🔵/🟡/🟢 all look the same grey. tmux
-# applies the #[fg] when it draws the status bar, so the color shows in any
-# terminal. After the dot we restore the normal tab foreground (TABFG) instead
-# of #[default] so we don't clobber the focused window's red background.
+# The marker is a checkbox glyph, not a colored dot: one dot in three shades is
+# only legible if you can tell the shades apart at a glance, and on a busy
+# status line you often can't. [~]/[ ]/[x] say the state outright.
 #
-# Colors are the *bright* gruvbox variants, and "waiting" is orange rather than
-# yellow: gruvbox yellow and green are both dark yellow-greens (CIEDE2000 ~18
-# apart — confusable at one character), while orange vs green is ~36. Bright red
-# would separate further still, but it washes out against the focused window's
-# red background.
-TABFG='#EBDBB2'                          # dracula white = normal window-tab fg
-BUSY="#[fg=#83A598]●#[fg=$TABFG] "       # working            (bright blue)
-WAIT="#[fg=#FE8019]●#[fg=$TABFG] "       # waiting for input  (bright orange)
-DONE="#[fg=#B8BB26]●#[fg=$TABFG] "       # finished / ready   (bright green)
+# Color is kept as a redundant cue, applied by *tmux* via #[fg=...] rather than
+# by a colored emoji: urxvt renders emoji monochrome, so 🔵/🟡/🟢 all look the
+# same grey, while tmux's #[fg] shows in any terminal. After the marker we
+# restore the normal tab foreground (TABFG) instead of #[default] so we don't
+# clobber the focused window's red background.
+TABFG='#EBDBB2'                            # dracula white = normal window-tab fg
+BUSY="#[fg=#83A598][~]#[fg=$TABFG] "       # working            (bright blue)
+WAIT="#[fg=#FE8019][ ]#[fg=$TABFG] "       # waiting for input  (bright orange)
+DONE="#[fg=#B8BB26][x]#[fg=$TABFG] "       # finished / ready   (bright green)
 
 tmux list-panes -a -f '#{pane_active}' \
   -F '#{window_id}|#{pane_current_command}|#{pane_tty}|#{window_name}|#{@agent_state}' |

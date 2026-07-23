@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Record an AI agent's state on the tmux pane it runs in, so the window namer
-# (name_windows.sh) can prepend a status dot to the window name. Shared by both
-# Claude Code (via ~/.claude/settings.json hooks) and opencode (via its plugin
-# at ~/.config/opencode/plugin/tmux-status.js).
+# (name_windows.sh) can prepend a status marker to the window name. Shared by
+# both Claude Code (via ~/.claude/settings.json hooks) and opencode (via its
+# plugin at ~/.config/opencode/plugin/tmux-status.js).
 #
 # The agent inherits $TMUX_PANE from the pane it was launched in, so we can
 # target that exact pane even though this is a separate short-lived process.
@@ -27,7 +27,7 @@ else
   tmux set-option -p -t "$pane" @agent_state "$state" 2>/dev/null
 fi
 
-# Nudge the status line so the dot updates now instead of at the next tick.
+# Nudge the status line so the marker updates now instead of at the next tick.
 tmux refresh-client -S 2>/dev/null
 
 exit 0
