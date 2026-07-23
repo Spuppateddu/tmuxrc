@@ -19,10 +19,16 @@ NAME="$HOME/.tmuxrc/scripts/window_name.sh"
 # applies the #[fg] when it draws the status bar, so the color shows in any
 # terminal. After the dot we restore the normal tab foreground (TABFG) instead
 # of #[default] so we don't clobber the focused window's red background.
+#
+# Colors are the *bright* gruvbox variants, and "waiting" is orange rather than
+# yellow: gruvbox yellow and green are both dark yellow-greens (CIEDE2000 ~18
+# apart — confusable at one character), while orange vs green is ~36. Bright red
+# would separate further still, but it washes out against the focused window's
+# red background.
 TABFG='#EBDBB2'                          # dracula white = normal window-tab fg
-BUSY="#[fg=#83A598]●#[fg=$TABFG] "       # working            (blue)
-WAIT="#[fg=#D79921]●#[fg=$TABFG] "       # waiting for input  (yellow)
-DONE="#[fg=#98971A]●#[fg=$TABFG] "       # finished / ready   (green)
+BUSY="#[fg=#83A598]●#[fg=$TABFG] "       # working            (bright blue)
+WAIT="#[fg=#FE8019]●#[fg=$TABFG] "       # waiting for input  (bright orange)
+DONE="#[fg=#B8BB26]●#[fg=$TABFG] "       # finished / ready   (bright green)
 
 tmux list-panes -a -f '#{pane_active}' \
   -F '#{window_id}|#{pane_current_command}|#{pane_tty}|#{window_name}|#{@agent_state}' |
