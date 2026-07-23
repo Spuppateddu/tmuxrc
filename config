@@ -91,7 +91,7 @@ set -g pane-border-indicators arrows
 # so a border only turns red when the pane below/right of it is focused.
 set -g pane-border-status off
 set -g pane-border-style 'fg=#3c3836'
-set -g pane-active-border-style 'fg=#CC241D,bold'
+set -g pane-active-border-style 'fg=#D79921,bold'
 
 # Make cwd/branch instant: path-aware scripts + a redraw on every switch
 run-shell '~/.tmuxrc/scripts/fast_status.sh'
